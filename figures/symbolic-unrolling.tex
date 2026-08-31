@@ -1,0 +1,39 @@
+\documentclass[tikz,border=6pt]{standalone}
+\input{figures/diagram-style.tex}
+
+\begin{document}
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \node[panel mark,anchor=west] at (0,58) {symbolic search models};
+
+  \node[operation,minimum width=42mm,minimum height=10mm,fill=goldwash] (concrete) at (27,42)
+    {concrete simulation\\[-1pt]\scriptsize one chosen stream};
+  \node[operation,minimum width=42mm,minimum height=10mm,fill=pinkwash] (concolic) at (86,42)
+    {concolic execution\\[-1pt]\scriptsize real run + formulas};
+  \node[operation,minimum width=52mm,minimum height=10mm,fill=cyanwash] (bmc) at (154,42)
+    {bounded symbolic unrolling\\[-1pt]\scriptsize all streams in one formula};
+
+  \node[datum,minimum width=29mm] (cinput) at (27,25) {$I=0101\ldots$};
+  \node[datum,minimum width=35mm] (pc) at (86,25) {$PC=c_1\wedge c_2\wedge\cdots$};
+  \node[datum,minimum width=47mm] (phi) at (154,25)
+    {$\Phi=\mathrm{Init}(S_0)\wedge\bigwedge T_t\wedge \mathrm{success}(S_{122})$};
+
+  \draw[flow] (concrete) -- node[transition label] {run forward} (cinput);
+  \draw[flow] (concolic) -- node[transition label] {record branch guards} (pc);
+  \draw[flow] (bmc) -- node[transition label] {copy transition 122 times} (phi);
+
+  \node[secondary,align=center,text width=41mm] at (27,9)
+    {answers ``does this input work?''};
+  \node[secondary,align=center,text width=45mm] at (86,9)
+    {negate one guard, solve, rerun};
+  \node[secondary,align=center,text width=55mm] at (154,9)
+    {solve $\exists I_0\ldots I_{120},S_1\ldots S_{122}.\ \Phi$};
+
+  \draw[accent curve,-{Stealth[length=2.2mm,width=1.6mm]}]
+    (96,20) .. controls (117,14) and (126,16) .. (137,23);
+  \node[annotation,fill=paper,inner sep=1.2pt] at (119,14)
+    {same solver idea};
+
+  \draw[hairline] (56,4) -- (56,50);
+  \draw[hairline] (116,4) -- (116,50);
+\end{tikzpicture}
+\end{document}

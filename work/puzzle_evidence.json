@@ -1,0 +1,84 @@
+{
+  "artifacts": {
+    "ind1_evidence": {
+      "path": "work/ind1_evidence.json",
+      "sha256": "57c91a9ed122abf07c6a5274c091a4a1d597e9a6bf5d40e7f22cb9b1fc9513de"
+    },
+    "regions": {
+      "path": "work/regions.json",
+      "sha256": "aa8d0089d41355df46fd7bb43a2c69207c4c94a4ea892d59ee14484e01ca7bd7"
+    },
+    "solution_fixture": {
+      "path": "work/solution_bits.txt",
+      "sha256": "34398845f915a4e1afc7e3ed9bd6b1f9e5ebf6d36e4db5403d3120e9d545b9fb"
+    }
+  },
+  "claims": {
+    "circuit_key_uniqueness": "unique_under_recorded_IND-1_source_harness",
+    "compiler_prerequisite": "IND-1_pass",
+    "gds_extraction": "not_claimed",
+    "puzzle_solution_count": 1,
+    "region_interpretation": "selected_non_column_cover_under_recorded_interpretation_assumptions",
+    "result": "pass"
+  },
+  "crosscheck": {
+    "artifact_sha256": "aa8d0089d41355df46fd7bb43a2c69207c4c94a4ea892d59ee14484e01ca7bd7",
+    "command_template": "python -B work/verification/verify_starbattle.py --regions <fresh-temporary-regions.json> --key work/solution_bits.txt",
+    "result": "pass",
+    "summary": [
+      "M10: artifact PASS - 121 cells, 11 connected regions",
+      "M10: key PASS - 121 shift bits + 8 zero tail bits",
+      "M10: key stars per region: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]",
+      "M10: independent solver found exactly 1 solution",
+      "M10: unique solution matches the canonical key",
+      "M10: PASS"
+    ]
+  },
+  "ind1_binding": {
+    "model_manifest_sha256": "6dad839547f2de43963b7d21e9e91ea8870f5d870650376a242e5bbd135229ef",
+    "netlist_sha256": "350e998acd33575df3b8872870fef15813975e6d9b05e30744ab750cce524401",
+    "result": "pass",
+    "silicon_ir_sha256": "6ee0eafc2cfae9af97d92f88574b9a950f2bbb8bcf162d2678837287f6749667"
+  },
+  "key_uniqueness": {
+    "artifacts": {
+      "model_manifest_sha256": "6dad839547f2de43963b7d21e9e91ea8870f5d870650376a242e5bbd135229ef",
+      "netlist_sha256": "350e998acd33575df3b8872870fef15813975e6d9b05e30744ab750cce524401",
+      "sky130_ir_sha256": "133522949a3731726f81cb2f71b302b86f5945830eb1b9f70ba1b37a3d82a9fb"
+    },
+    "blocking_result": "unsat",
+    "formula_sha256": "5b20c3a7d824ff1088e1f217821831cf507e0adba7e9f02e79a67e1e52ca3029",
+    "harness": {
+      "clock_at_active_edge": 1,
+      "enable": "1 for 121 shift edges, then 0",
+      "initial_state": "async_value if present, otherwise 0",
+      "post_shift_I": 0,
+      "rst_n": 1,
+      "shift_cycles": 121,
+      "success_observation": "pre-edge after one disabled verdict edge",
+      "undriven_61217": 0,
+      "verdict_edges": 1
+    },
+    "key_fixture_sha256": "34398845f915a4e1afc7e3ed9bd6b1f9e5ebf6d36e4db5403d3120e9d545b9fb",
+    "model_result": "sat_canonical_key",
+    "result": "unique",
+    "solver": "z3-4.13.0",
+    "symbolic_key_bits": 121
+  },
+  "recovery": {
+    "active_state_count": 43,
+    "assumptions": [
+      "121 enabled samples map row-major to an 11x11 grid",
+      "intended regions are four-neighbor connected",
+      "the intended region-counter partition appears as eleven disjoint zero-baseline one-hot final-state supports",
+      "region counters are distinct from the literal-column counter bank"
+    ],
+    "connected_exact_cover_count": 2,
+    "connected_unique_support_count": 35,
+    "key_consulted_during_selection": false,
+    "literal_column_cover_count": 1,
+    "non_column_cover_count": 1,
+    "one_hot_streams": 121
+  },
+  "schema": "asic-puzzle.puzzle-evidence.v1"
+}

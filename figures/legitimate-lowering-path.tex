@@ -1,0 +1,46 @@
+\documentclass[tikz,border=10pt]{standalone}
+\input{figures/diagram-style.tex}
+
+\tikzset{
+  flow text/.style={font=\rmfamily\large,align=center,text=ink},
+  flow small/.style={font=\rmfamily\footnotesize,align=center,text=ink},
+  flow arrow/.style={-{Stealth[length=2mm,width=1.35mm]},draw=ink,line width=.62pt}
+}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \path[use as bounding box] (0,0) rectangle (10,8.7);
+
+  \node[flow text,font=\rmfamily\bfseries\large] at (5,8.16)
+    {checked netlist $+$ pinned model manifest};
+
+  \draw[flow arrow] (5,7.88) -- (5,7.45);
+  \node[flow small,fill=paper,inner xsep=2pt] at (5,7.18)
+    {emit one source op per recovered cell};
+
+  \draw[flow arrow] (5,6.92) -- (5,6.72);
+  \node[flow text] at (5,6.55)
+    {project-local SKY130 IR};
+
+  \draw[flow arrow] (5,6.25) -- (5,5.82);
+  \node[flow small,fill=paper,inner xsep=2pt] at (5,5.55)
+    {print / parse / verify};
+
+  \draw[flow arrow] (5,5.28) -- (5,5.10);
+  \node[flow text] at (5,4.92)
+    {SKY130-to-Silicon lowering};
+
+  \draw[flow arrow] (5,4.62) -- (5,4.19);
+  \node[flow small,fill=paper,inner xsep=2pt] at (5,3.92)
+    {print / parse / verify};
+
+  \draw[flow arrow] (5,3.65) -- (5,3.47);
+  \node[flow text] at (5,3.29)
+    {Silicon IR};
+
+  \draw[flow arrow] (5,2.98) -- (5,2.30);
+
+  \node[flow text] at (5,2.02)
+    {evaluators, miter, and puzzle clients};
+\end{tikzpicture}
+\end{document}

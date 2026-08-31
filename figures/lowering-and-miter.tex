@@ -1,0 +1,111 @@
+\documentclass[tikz,border=7pt]{standalone}
+\input{figures/diagram-style.tex}
+
+\tikzset{
+  startstop/.style={
+    rectangle,
+    rounded corners=4pt,
+    draw=ink,
+    fill=paper,
+    line width=.58pt,
+    minimum width=26mm,
+    minimum height=8mm,
+    align=center,
+    font=\rmfamily\footnotesize
+  },
+  flowbox/.style={
+    draw=ink,
+    fill=cyanwash,
+    line width=.58pt,
+    minimum width=38mm,
+    minimum height=9mm,
+    align=center,
+    font=\rmfamily\footnotesize
+  },
+  processbox/.style={
+    draw=ink,
+    fill=paper,
+    line width=.58pt,
+    minimum width=32mm,
+    minimum height=9mm,
+    align=center,
+    font=\rmfamily\footnotesize
+  },
+  proofbox/.style={
+    draw=ink,
+    fill=purplewash,
+    line width=.58pt,
+    minimum width=33mm,
+    minimum height=10mm,
+    align=center,
+    font=\rmfamily\footnotesize
+  },
+  checkdiamond/.style={
+    diamond,
+    aspect=1.75,
+    draw=ink,
+    fill=pinkwash,
+    line width=.58pt,
+    minimum width=25mm,
+    minimum height=13mm,
+    inner sep=1pt,
+    align=center,
+    font=\rmfamily\footnotesize
+  },
+  evidence/.style={
+    draw=ink,
+    fill=goldwash,
+    line width=.5pt,
+    minimum width=29mm,
+    minimum height=8mm,
+    align=center,
+    font=\rmfamily\scriptsize
+  },
+  smallnote/.style={font=\rmfamily\scriptsize,text=midink,align=center},
+  yesno/.style={font=\rmfamily\scriptsize,fill=paper,inner sep=1.2pt}
+}
+
+\begin{document}
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \path[use as bounding box] (-66,-64) rectangle (66,54);
+
+  \node[panel mark,anchor=west] at (-63,50) {IND-1 lowering check};
+
+  \node[startstop] (start) at (0,39) {checked netlist};
+  \node[flowbox] (sky) at (0,25) {project-local SKY130 IR};
+  \node[processbox,fill=paper] (serialize) at (0,11)
+    {print / parse / verify};
+
+  \node[flowbox,fill=cyanwash] (source) at (-32,-6)
+    {source evaluator\\[-1pt]\scriptsize SKY130 semantics};
+  \node[flowbox,fill=pinkwash] (target) at (32,-6)
+    {lowering evaluator\\[-1pt]\scriptsize Silicon IR};
+
+  \node[proofbox] (xor) at (0,-25)
+    {$101$ paired results\\[-1pt]
+     \scriptsize $92$ next-state $+$ $9$ outputs};
+  \node[processbox,fill=goldwash,minimum width=18mm] (z3) at (0,-40) {Z3};
+  \node[checkdiamond] (mismatch) at (0,-55)
+    {$\bigvee_j$\\[-1pt]\scriptsize mismatch?};
+  \node[startstop,fill=pinkwash,minimum width=28mm] (sat) at (-35,-55)
+    {SAT witness\\[-1pt]\scriptsize lowering bug};
+  \node[startstop,fill=purplewash,double,double distance=1.0pt] (unsat) at (35,-55)
+    {UNSAT};
+
+  \draw[flow] (start) -- (sky);
+  \draw[flow] (sky) -- (serialize);
+  \draw[flow] (serialize.south) -- ++(0,-6) -| (source.north);
+  \draw[flow] (serialize.south) -- ++(0,-6) -| (target.north);
+
+  \node[smallnote,fill=paper,inner sep=1.2pt] at (0,2.3)
+    {$96$ shared symbols: $4$ non-clock inputs $+$ $92$ state bits};
+
+  \draw[flow] (source.south) |- ([xshift=-14mm]xor.north);
+  \draw[flow] (target.south) |- ([xshift=14mm]xor.north);
+  \draw[flow] (xor) -- node[yesno] {$\Delta_j=r^S_j\oplus r^T_j$} (z3);
+  \draw[flow] (z3) -- (mismatch);
+  \draw[flow] (mismatch) -- node[yesno] {yes} (sat);
+  \draw[flow] (mismatch) -- node[yesno] {no} (unsat);
+
+\end{tikzpicture}
+\end{document}

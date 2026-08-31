@@ -1,0 +1,106 @@
+\documentclass[tikz,border=5pt]{standalone}
+\input{figures/diagram-style.tex}
+
+\tikzset{
+  coordinate index/.style={font=\rmfamily\scriptsize,text=ink},
+  tally cell/.style={
+    font=\rmfamily\bfseries\scriptsize,
+    text=ink,
+    minimum width=5.3mm,
+    minimum height=5.3mm,
+    inner sep=0pt
+  },
+  figure note/.style={font=\rmfamily\scriptsize,text=ink,align=center},
+  small heading/.style={font=\rmfamily\bfseries\footnotesize,text=ink,align=center}
+}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \path[use as bounding box] (0,0) rectangle (14.8,11.05);
+
+  % The face remains orthographic; only its lower and right edges carry depth.
+  \begin{scope}[shift={(2.02,10.02)},x=.76cm,y=-.76cm]
+    \path[fill=slate!18,draw=none]
+      (.28,.34) rectangle (11.34,11.37);
+    \path[cyan side]
+      (0,11) -- (11,11) -- (11.24,11.24) -- (.24,11.24) -- cycle;
+    \path[pink side]
+      (11,0) -- (11.24,.24) -- (11.24,11.24) -- (11,11) -- cycle;
+    \path[fill=paper,draw=ink,line width=.68pt] (0,0) rectangle (11,11);
+
+    % Marginal projections distinguish counts from coordinate indices.
+    \path[cyan facet,fill=cyanwash]
+      (0,11.38) rectangle (11,12.12);
+    \path[pink facet,fill=pinkwash]
+      (11.38,0) rectangle (12.12,11);
+    \path[gold facet,fill=goldwash]
+      (11.38,11.38) rectangle (12.12,12.12);
+    \foreach \k in {1,...,10}{
+      \draw[hairline] (\k,11.38) -- (\k,12.12);
+      \draw[hairline] (11.38,\k) -- (12.12,\k);
+    }
+
+    \foreach \c in {1,...,11}{
+      \node[coordinate index] at ({\c-.5},-.48) {\c};
+      \node[tally cell] at ({\c-.5},11.75) {2};
+    }
+    \foreach \r in {1,...,11}{
+      \node[coordinate index] at (-.48,{\r-.5}) {\r};
+      \node[tally cell] at (11.75,{\r-.5}) {2};
+    }
+    \node[font=\rmfamily\bfseries\scriptsize] at (11.75,11.75) {$\Sigma$};
+
+    \draw[grid rule] (0,0) grid (11,11);
+    \draw[outer rule] (0,0) rectangle (11,11);
+
+    % Exact row-major placement from solution_bits.txt: 22 stars total.
+    \foreach \c/\r in {
+      8/1,10/1,
+      1/2,6/2,
+      8/3,10/3,
+      1/4,3/4,
+      5/5,7/5,
+      3/6,9/6,
+      5/7,11/7,
+      2/8,7/8,
+      4/9,11/9,
+      6/10,9/10,
+      2/11,4/11
+    }{
+      \node[star mark,minimum size=4.7mm] at ({\c-.5},{\r-.5}) {};
+    }
+  \end{scope}
+
+  \node[figure note,anchor=south] at (6.20,10.60) {column index};
+  \node[figure note,rotate=90] at (1.13,5.84) {row index};
+  \node[figure note,anchor=north] at (6.20,.55) {column tally};
+  \node[figure note,rotate=90] at (11.57,5.84) {row tally};
+
+  % A compact structural certificate: hatch, not hue, marks forbidden neighbors.
+  \draw[hairline,line width=.4pt] (12.20,10.00) -- (14.55,10.00);
+  \node[count] at (13.38,9.50) {22};
+  \node[figure note] at (13.38,9.05) {selected cells};
+
+  \node[small heading] at (13.38,7.82) {adjacency check};
+  \begin{scope}[shift={(12.51,7.23)},x=.58cm,y=-.58cm]
+    \path[fill=paper] (0,0) rectangle (3,3);
+    \foreach \x/\y in {0/0,1/0,2/0,0/1,2/1,0/2,1/2,2/2}{
+      \path[fill=pinkwash,pattern=north east lines,pattern color=pink!70!ink]
+        (\x,\y) rectangle ++(1,1);
+    }
+    \draw[grid rule,line width=.35pt] (0,0) grid (3,3);
+    \draw[outer rule,line width=.62pt] (0,0) rectangle (3,3);
+    \node[star mark,minimum size=4.4mm] at (1.5,1.5) {};
+  \end{scope}
+  \node[figure note] at (13.38,5.12)
+    {all eight neighboring\\cells remain empty};
+
+  \draw[projection] (12.20,4.20) -- (14.55,4.20);
+  \node[small heading] at (13.38,3.58) {marginal constraints};
+  \node[figure note,anchor=east] at (13.25,2.96) {every row};
+  \node[font=\rmfamily\bfseries\footnotesize,anchor=west] at (13.48,2.96) {$=2$};
+  \node[figure note,anchor=east] at (13.25,2.38) {every column};
+  \node[font=\rmfamily\bfseries\footnotesize,anchor=west] at (13.48,2.38) {$=2$};
+  \draw[gold curve] (12.42,1.72) -- (14.34,1.72);
+\end{tikzpicture}
+\end{document}

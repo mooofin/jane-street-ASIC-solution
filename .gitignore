@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Regenerable extraction and simulation scratch
+*.vvp
+*.log
+work/netlist_raw.pkl
+work/puzzle_netlist.v
+work/tb.v
+work/puzzle_silicon_canon.mlir
+work/puzzle_silicon_lowered.mlir
+work/puzzle_silicon_sliced.mlir
+work/gate_*.v
+work/warmup_gate_*
+work/tmp_*
+work/puzzle_generic.mlir
+
+# Local figure rendering scratch
+tools/tectonic/
+work/*-tectonic.tex
+work/*-preview-copy.png
+work/tectonic-out/
